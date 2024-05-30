@@ -5,7 +5,6 @@ import Shopee.models.Product;
 import java.util.ArrayList;
 
 public interface ProductService {
-    ArrayList<Product> getProductList();
-    ArrayList<Product> editProduct();
-
+    ArrayList<Product> getCartProductList(String shopName);
+    ArrayList<Product> editCartProduct();
 }

@@ -1,6 +1,7 @@
 package Shopee.services.businessservice;
 
 import Shopee.models.Product;
+import Shopee.services.cartservice.CartServiceImpl;
 import Shopee.views.HomePageView;
 
 import java.util.ArrayList;
@@ -8,14 +9,16 @@ import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class OwnerServiceImpl implements BusinessService, ProductService {
+public class OwnerServiceImpl implements ProductService {
     private static volatile OwnerServiceImpl ownerService;
-    public OwnerServiceImpl() {}
-    public static OwnerServiceImpl getOwnerService() {
+    private String shopName;
+
+    public static OwnerServiceImpl getOwnerService(String shopName) {
         if (ownerService == null){
             synchronized (CustomerServiceImpl.class){
                 if (ownerService == null){
                     ownerService = new OwnerServiceImpl();
+                    ownerService.shopName = shopName;
                 }
             }
         }
@@ -26,13 +29,12 @@ public class OwnerServiceImpl implements BusinessService, ProductService {
     public Object displayMenuAndOwnerChoice() {
         Scanner scanner = new Scanner(System.in);
         do {
-            System.out.println("Chào mừng đến trình quản lý của Owner:");
-            System.out.println("0. Xem danh sách sản phẩm trong giỏ hàng");
-            System.out.println("1. Thêm sản phẩm vào giỏ hàng");
-            System.out.println("2. Xoá sản phẩm khỏi giỏ hàng");
-            System.out.println("3. Sửa thông tin sản phẩm");
-            System.out.println("4. Thanh toán sản phẩm");
-            System.out.println("5. Thoát");
+            System.out.println("Chào mừng đến trình quản lý của " + shopName + ".");
+            System.out.println("0. Danh sách sản phẩm của shop");
+            System.out.println("1. Thêm sản phẩm mới vào giỏ hàng của shop");
+            System.out.println("2. Xoá sản phẩm khỏi giỏ hàng của shop");
+            System.out.println("3. Sửa thông tin sản phẩm trong giỏ hàng của shop");
+            System.out.println("4. Thoát");
 
             System.out.print("Mời chọn chức năng: ");
             try {
@@ -40,9 +42,10 @@ public class OwnerServiceImpl implements BusinessService, ProductService {
                 scanner.nextLine();
                 switch (choose) {
                     case 0:
-                        System.out.println("Xem tất cả sản phẩm trong giỏ hàng");
-                        if (getOwnerList != null && !getOwnerList.isEmpty()){
-                            getOwnerList.forEach(System.out::println);
+                        ProductServiceImpl ChoiceCartInService = ProductServiceImpl.getInstanceProduct();
+                        ArrayList<Product> cartProducts = ChoiceCartInService.getCartProductList(shopName);
+                        if (cartProducts != null && !cartProducts.isEmpty()){
+                            cartProducts.forEach(System.out::println);
                         }
                         else {
                             System.out.println("Danh sách sản phẩm trống.");
@@ -50,35 +53,18 @@ public class OwnerServiceImpl implements BusinessService, ProductService {
                         }
                         break;
                     case 1:
-                        System.out.println("Thêm sản phẩm vào giỏ hàng");
-                        ProductServiceImpl addOwnerInService = ProductServiceImpl.getInstanceProduct();
-                        ArrayList<Product> addProductList = addOwnerInService.getProductList();
-                        if (addProductList != null){
-                            System.out.println("Danh sách sản phẩm:");
-                            for (int i = 0; i < addProductList.size(); i++) {
-                                System.out.println(i + 1 + ". " + addProductList.get(i));
-                            }
-                        }
-                        System.out.print("Nhập số thứ tự của sản phẩm cần thêm vào giỏ hàng: ");
-                        int choiceIndex = scanner.nextInt();
-                        if (choiceIndex >= 1 && choiceIndex <= addProductList.size()) {
-                            Product productToAdd = addProductList.get(choiceIndex - 1);
-                            if (getOwnerList == null)
-                                getOwnerList = new ArrayList<>();
-                            getOwnerList.add(productToAdd);
-                            System.out.println(productToAdd + " đã được thêm vào giỏ hàng.");
-                            //Danh sách không in ra sản phẩm đã thêm như yêu cầu
-                            System.out.println("Danh sách sản phẩm sau khi thêm:");
-                            getOwnerList.forEach(System.out::println);
-                        }
-                        else
-                            System.out.println("Lựa chọn không hợp lệ.");
+                        //In ra danh sách sản phẩm
+
+                        //Check sản phẩm và thêm mới vào danh sách
+
+                        //Lưu sản phẩm đó vào danh sách cartshop (.txt)
+
+
                         break;
                     case 2:
-                        System.out.println("Xoá sản phẩm khỏi giỏ hàng");
-                        ProductServiceImpl removeOwnerService = ProductServiceImpl.getInstanceProduct();
-                        ArrayList<Product> removeProductList = removeOwnerService.getProductList();
-                        if (removeProductList == null || removeProductList.isEmpty())
+                        ProductServiceImpl CartShopInService = ProductServiceImpl.getInstanceProduct();
+                        ArrayList<Product> removeProducts = CartShopInService.getCartProductList(shopName);
+                        if (removeProducts == null || removeProducts.isEmpty())
                             System.out.println("Không có sản phẩm để xoá");
                         System.out.println("Danh sách sản phẩm trong giỏ hàng:");
                         for (int i = 0; i < getOwnerList.size(); i++)
@@ -96,14 +82,9 @@ public class OwnerServiceImpl implements BusinessService, ProductService {
                             System.out.println("Lựa chọn không hợp lệ.");
                         break;
                     case 3:
-                        System.out.println("Sửa thông tin sản phẩm");
-                        editProduct();
+                        editCartProduct();
                         break;
                     case 4:
-                        System.out.println("Thanh toán sản phẩm");
-                        Payment();
-                        break;
-                    case 5:
                         HomePageView homePageView = HomePageView.gethomePageView();
                         homePageView.displayHomePage();
                         break;
@@ -122,63 +103,16 @@ public class OwnerServiceImpl implements BusinessService, ProductService {
     }
 
     @Override
-    public Object Payment() {
-        ProductServiceImpl productService = ProductServiceImpl.getInstanceProduct();
-        ArrayList<Product> paymentList = productService.getProductList();
-        if (paymentList == null || paymentList.isEmpty()) {
-            System.out.println("Giỏ hàng trống. Không có gì để thanh toán.");
-            return null;
-        }
-        double total = 0;
-        for (Product product : paymentList) {
-            total += product.getProducrPrice();
-            product.setProductAmount(product.getProductAmount() - 1);
-        }
-        System.out.println("Tổng số tiền cần thanh toán: " + total + " VND");
-        System.out.println("Bạn chắc chắn muốn thanh toán? (1: Có, 2: Không)");
-        int choice = new Scanner(System.in).nextInt();
-        if (choice == 1) {
-            System.out.println("Thanh toán thành công!");
-            getOwnerList.clear();
-            return total;
-        }
-        else {
-            System.out.println("Thanh toán đã bị huỷ.");
-            return null;
-        }
+    public ArrayList<Product> getCartProductList(String shopName) {
+        return getCartProductList(shopName);
     }
 
     @Override
-    public Object add(Product product) {
-        if (!getOwnerList.contains(product)) {
-            getOwnerList.add(product);
-        }
-        return product + " dã được thêm";
-    }
-
-    @Override
-    public Object remove(Product product) {
-        boolean removed = getOwnerList.removeIf(p -> p.getProductID() == product.getProductID());
-        if (removed) {
-            System.out.println("Đã xóa sản phẩm:");
-            System.out.println(product);
-        } else {
-            System.out.println("Không tìm thấy sản phẩm để xóa.");
-        }
-        return getOwnerList;
-    }
-
-    @Override
-    public ArrayList<Product> getProductList() {
-        return getOwnerList;
-    }
-
-    @Override
-    public  ArrayList<Product> editProduct() {
-        ProductServiceImpl editOwmerService = ProductServiceImpl.getInstanceProduct();
-        ArrayList<Product> editProductList = editOwmerService.getProductList();
+    public  ArrayList<Product> editCartProduct() {
+        ProductServiceImpl ChoiceCartInService = ProductServiceImpl.getInstanceProduct();
+        ArrayList<Product> editProducts = ChoiceCartInService.getCartProductList(shopName);
         Scanner scanner = new Scanner(System.in);
-        if (editProductList.isEmpty()) {
+        if (editProducts.isEmpty()) {
             System.out.println("Không có sản phẩm nào để sửa.");
             return null;
         }

@@ -1,8 +1,0 @@
-1 - Áo thun nam - 60.000 - 20 - Trơn, có cổ
-2 - Áo sơ mi nam - 80.000 - 20 - Cotton, có cổ
-3 - Quần jean nam - 150.000 - 15 - Vải dày
-4 - Quần jean nữ - 180.000 - 60 - Vải mỏng
-5 - Áo sơ mi nữ - 65.000 - 30 - Vải mát
-6 - Quần thu nữ - 150.000 - 40 - Vải mỏng
-7 - Quần sort nam - 65.000 - 15 - Vải mát
-8 - Quần kaki - 120.000 - 25 - Vải mát

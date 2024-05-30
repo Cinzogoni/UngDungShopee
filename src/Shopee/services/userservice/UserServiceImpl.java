@@ -1,8 +1,8 @@
 package Shopee.services.userservice;
 
-import Shopee.Util.ReadAdminFile;
-import Shopee.Util.ReadCustomerFile;
-import Shopee.Util.ReadOwnerFile;
+import Shopee.util.readfile.ReadAdminFile;
+import Shopee.util.readfile.ReadCustomerFile;
+import Shopee.util.readfile.ReadOwnerFile;
 import Shopee.models.Admin;
 import Shopee.models.Customer;
 import Shopee.models.Owner;
@@ -46,6 +46,13 @@ public class UserServiceImpl implements UserService{
         return matcher.matches();
     }
 
+    private boolean phoneNumberIsValid(String phoneNumber) {
+        String regex = "\"^(\\\\d{3}[- .]?){2}\\\\d{4}$\"";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(phoneNumber);
+        return matcher.matches();
+    }
+
     @Override
     public Object login() {
         Scanner scanner = new Scanner(System.in);
@@ -70,7 +77,7 @@ public class UserServiceImpl implements UserService{
         for (Owner owner : OwnUserList) {
             if (owner.getShopownerID().equals(username) && owner.getShopownerPassword().equals(password)) {
                 System.out.println("Đăng nhập thành công với vai trò Owner.");
-                return OwnerServiceImpl.getOwnerService().displayMenuAndOwnerChoice();
+                return OwnerServiceImpl.getOwnerService(owner.getShopownerName()).displayMenuAndOwnerChoice();
             }
         }
 
@@ -88,38 +95,67 @@ public class UserServiceImpl implements UserService{
     @Override
     public Object register() {
         Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Nhập tên người dùng: ");
-        String username = scanner.nextLine();
-
-        System.out.print("Nhập số điện thoại: ");
-        String phoneNumber = scanner.nextLine();
-
-        System.out.print("Nhập địa chỉ: ");
-        String address = scanner.nextLine();
-
-        System.out.print("Nhập mật khẩu: ");
-        String password = scanner.nextLine();
-
-        if (!passwordIsValid(password)) {
-            System.out.println("Mật khẩu không hợp lệ. Mật khẩu phải có từ 8 đến 16 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.");
-            return null;
-        }
-
         System.out.print("Chọn hình thức đăng ký (Khách hàng/ Đại lý): ");
-        String role = scanner.nextLine().toLowerCase();
+        String choice = scanner.nextLine();
+        if (choice.equals("Khách hàng")) {
 
-        if (role.equals("Khách hàng")) {
-            Customer newCustomer = new Customer(username, phoneNumber, address, password);
+            System.out.print("Nhập tên người dùng: ");
+            String customerName = scanner.nextLine();
+
+            System.out.print("Nhập số điện thoại, ví dụ: 038 647 9893");
+            String customerPhoneNumber = scanner.nextLine();
+            if (!phoneNumberIsValid(customerPhoneNumber)){
+                System.out.println("Hãy nhập lại số điẹn thoại");
+                return null;
+            }
+
+            System.out.print("Nhập địa chỉ: ");
+            String customerAddress = scanner.nextLine();
+
+            System.out.print("Nhập mật khẩu: ");
+            String customerPassword = scanner.nextLine();
+            if (!passwordIsValid(customerPassword)) {
+                System.out.println("Mật khẩu không hợp lệ. Mật khẩu phải có từ 8 đến 16 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.");
+                return null;
+            }
+
+            Customer newCustomer = new Customer(customerName, customerPhoneNumber, customerAddress, customerPassword);
             CusUserList.add(newCustomer);
             saveToFile("D:\\06-Java\\00-UngDungShopee\\src\\Shopee\\database\\CustomerUserList.txt", newCustomer);
             System.out.println("Chúc mừng bạn đã trở thành khách hàng.");
         }
-        else if (role.equals("Đại lý")) {
-            System.out.println("Mời liên hệ số sau để được hỗ trợ: 0386479893 (Huy).");
+        else if (choice.equals("Đại lý")) {
+            System.out.print("Nhập ID cho shop: ");
+            String ownerID = scanner.nextLine();
+
+            System.out.print("Nhập số tên cho shop: ");
+            String ownerName = scanner.nextLine();
+
+            System.out.print("Nhập sổ điện thoại cho shop, ví dụ: 038 647 9893");
+            String ownerNumber = scanner.nextLine();
+            if (!phoneNumberIsValid(ownerNumber)){
+                System.out.println("Hãy nhập lại số điẹn thoại");
+                return null;
+            }
+
+            System.out.print("Nhập địa chỉ cho shop: ");
+            String ownerAddress = scanner.nextLine();
+
+            System.out.print("Nhập mật khẩu: ");
+            String ownerPassword = scanner.nextLine();
+
+            if (!passwordIsValid(ownerPassword)) {
+                System.out.println("Mật khẩu không hợp lệ. Mật khẩu phải có từ 8 đến 16 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.");
+                return null;
+            }
+
+            Owner newOwner = new Owner(ownerID, ownerName, ownerNumber, ownerAddress, ownerPassword);
+            OwnUserList.add(newOwner);
+            saveToFile("D:\\06-Java\\00-UngDungShopee\\src\\Shopee\\database\\OwnerUserList.txt", newOwner);
+            System.out.println("Chúc mừng bạn đã trở thành đại lý.");
         }
         else
-            System.out.println("Vai trò không hợp lệ. Vui lòng nhập 'customer' hoặc 'owner'.");
+            System.out.println("Vai trò không hợp lệ. Vui lòng nhập 'Khách hàng' hoặc 'Đại lý'.");
         return null;
     }
 

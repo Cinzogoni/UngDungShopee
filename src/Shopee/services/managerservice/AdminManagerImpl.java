@@ -1,7 +1,7 @@
 package Shopee.services.managerservice;
 
-import Shopee.Util.ReadCustomerFile;
-import Shopee.Util.ReadOwnerFile;
+import Shopee.util.readfile.ReadCustomerFile;
+import Shopee.util.readfile.ReadOwnerFile;
 import Shopee.models.Customer;
 import Shopee.models.Owner;
 import Shopee.services.businessservice.CustomerServiceImpl;

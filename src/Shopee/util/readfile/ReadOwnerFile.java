@@ -1,6 +1,5 @@
-package Shopee.Util;
+package Shopee.util.readfile;
 
-import Shopee.models.Customer;
 import Shopee.models.Owner;
 
 import java.io.BufferedReader;
@@ -21,7 +20,7 @@ public class ReadOwnerFile {
                 String ownerPhoneNumber = parts[2].trim();
                 String ownerAddress = parts[3].trim();
                 String ownerPassword = parts[4].trim();
-                owners.add(new Owner(ownerID, ownerNmae, ownerPhoneNumber, ownerAddress, ownerPassword ));
+                owners.add(new Owner(ownerID, ownerNmae, ownerPhoneNumber, ownerAddress, ownerPassword));
             }
             return owners;
         }
