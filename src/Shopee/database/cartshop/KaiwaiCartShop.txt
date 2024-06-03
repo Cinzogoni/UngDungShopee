@@ -3,7 +3,7 @@
 15957 - Quần jean nam - 150.000 - 15 - Vải dày
 35748 - Quần jean nữ - 180.000 - 60 - Vải mỏng
 32187 - Áo sơ mi nữ - 65.000 - 30 - Vải mát
-32984 - Quần thu nữ - 150.000 - 40 - Vải mỏng
+32984 - Quần thun nữ - 150.000 - 40 - Vải mỏng
 12327 - Quần sort nam - 65.000 - 15 - Vải mát
 95752 - Quần kaki - 120.000 - 25 - Vải mát
 32756 - Áo len nữ - 100.000 - 12 - Vải len

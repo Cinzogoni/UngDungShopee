@@ -2,6 +2,7 @@ package Shopee.services.businessservice;
 
 import Shopee.util.readfile.ReadFileUtil;
 import Shopee.models.Product;
+import Shopee.util.writefile.WriteProductFile;
 
 import java.util.ArrayList;
 
@@ -12,7 +13,7 @@ public class ProductServiceImpl implements ProductService {
     }
     public static ProductServiceImpl getInstanceProduct() {
         if (productService == null) {
-            synchronized (CustomerServiceImpl.class) {
+            synchronized (ProductServiceImpl.class) {
                 if (productService == null) {
                     productService = new ProductServiceImpl();
                 }
@@ -29,8 +30,9 @@ public class ProductServiceImpl implements ProductService {
         ProductList = ReadFileUtil.readProductsFile("D:\\06-Java\\00-UngDungShopee\\src\\Shopee\\database\\ProductList.txt");
         KaiwaiCartShop = ReadFileUtil.readProductsFile("D:\\06-Java\\00-UngDungShopee\\src\\Shopee\\database\\cartshop\\KaiwaiCartShop.txt");
         NimaCartShop = ReadFileUtil.readProductsFile("D:\\06-Java\\00-UngDungShopee\\src\\Shopee\\database\\cartshop\\NimaCartShop.txt");
-        TisaCartShop = ReadFileUtil.readProductsFile("D:\\06-Java\\00-UngDungShopee\\src\\Shopee\\database\\cartshop\\TisaCartShop");
+        TisaCartShop = ReadFileUtil.readProductsFile("D:\\06-Java\\00-UngDungShopee\\src\\Shopee\\database\\cartshop\\TisaCartShop.txt");
     }
+
 
     private  ArrayList<Product> getCartShop(String shopName) {
         switch (shopName) {
@@ -44,10 +46,22 @@ public class ProductServiceImpl implements ProductService {
                 return new ArrayList<>();
         }
     }
-
-    @Override
-    public ArrayList<Product> getProductList() {
-        return new ArrayList<>();
+    public static void updateCartFile(String shopName, ArrayList<Product> cart) {
+        String filePath = "";
+        switch (shopName) {
+            case "Kaiwai Shop":
+                filePath = "D:\\06-Java\\00-UngDungShopee\\src\\Shopee\\database\\cartshop\\KaiwaiCartShop.txt";
+                break;
+            case "Nima Shop":
+                filePath = "D:\\06-Java\\00-UngDungShopee\\src\\Shopee\\database\\cartshop\\NimaCartShop.txt";
+                break;
+            case "Tisa Shop":
+                filePath = "D:\\06-Java\\00-UngDungShopee\\src\\Shopee\\database\\cartshop\\TisaCartShop.txt";
+                break;
+            default:
+                break;
+        }
+        WriteProductFile.writeProductsFile(filePath, cart);
     }
 
     @Override
@@ -59,4 +73,6 @@ public class ProductServiceImpl implements ProductService {
     public ArrayList<Product> editCartProduct() {
         return new ArrayList<>();
     }
+
+
 }

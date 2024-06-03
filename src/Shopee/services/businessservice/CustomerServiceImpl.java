@@ -22,7 +22,6 @@ public class CustomerServiceImpl {
         }
         return customerService;
     }
-    ArrayList<Product> getCustomerList = new ArrayList<>();
 
     public Object displayMenuAndGetCustomerChoice() {
         Scanner scanner = new Scanner(System.in);
@@ -46,7 +45,7 @@ public class CustomerServiceImpl {
                         scanner.nextLine();
 
                         String shopName = "";
-                        CartServiceImpl cartService = CartServiceImpl.getCartService();
+                        CartServiceImpl cartService = CartServiceImpl.getCartService(shopName);
                         switch (shopChoice) {
                             case 1:
                                 shopName = "Kaiwai Shop";

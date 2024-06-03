@@ -50,11 +50,11 @@ public class Product {
         this.productAmount = productAmount;
     }
 
-    public String getDescribe() {
+    public String getProductDescribe() {
         return productDescribe;
     }
 
-    public void setDescribe(String productDescribe) {
+    public void setProductDescribe(String productDescribe) {
         this.productDescribe = productDescribe;
     }
 
