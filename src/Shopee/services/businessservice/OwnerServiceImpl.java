@@ -1,8 +1,10 @@
 package Shopee.services.businessservice;
 
+import Shopee.models.Customer;
+import Shopee.models.Owner;
 import Shopee.models.Product;
 import Shopee.services.cartservice.CartServiceImpl;
-import Shopee.util.writefile.WriteProductFile;
+import Shopee.util.readfile.ReadOwnerFile;
 import Shopee.views.HomePageView;
 
 import java.util.ArrayList;
@@ -16,6 +18,9 @@ import static Shopee.services.businessservice.ProductServiceImpl.updateCartFile;
 public class OwnerServiceImpl implements ProductService {
     private static volatile OwnerServiceImpl ownerService;
     private String shopName;
+    private String shopID;
+    private String shopPhoneNumber;
+    private String shopAddress;
 
     public static OwnerServiceImpl getOwnerService(String shopName) {
         if (ownerService == null){
@@ -23,22 +28,40 @@ public class OwnerServiceImpl implements ProductService {
                 if (ownerService == null){
                     ownerService = new OwnerServiceImpl();
                     ownerService.shopName = shopName;
+
+                    Owner ownerInfo = ownerService.getOwnerInfoFromDatabase(shopName);
+                    if (ownerInfo != null){
+                        ownerService.shopID = ownerInfo.getShopownerID();
+                        ownerService.shopPhoneNumber = ownerInfo.getShopownerNumber();
+                        ownerService.shopAddress = ownerInfo.getShopownerAddress();
+                    }
                 }
             }
         }
         return ownerService;
+    }
+    private Owner getOwnerInfoFromDatabase(String shopName) {
+        String filePath = "src\\Shopee\\database\\OwnerUserList.txt";
+        ArrayList<Owner> owners = ReadOwnerFile.readOwnersFile(filePath);
+        for (Owner owner : owners) {
+            if (owner.getShopownerName().equals(shopName)) {
+                return owner;
+            }
+        }
+        return null;
     }
 
     public Object displayMenuAndOwnerChoice() {
         Scanner scanner = new Scanner(System.in);
         int searchType;
         do {
-            System.out.println("Chào mừng đến trình quản lý của " + shopName + ".");
-            System.out.println("0. Danh sách sản phẩm của shop");
-            System.out.println("1. Thêm sản phẩm mới vào giỏ hàng của shop");
-            System.out.println("2. Xoá sản phẩm khỏi giỏ hàng của shop");
-            System.out.println("3. Sửa thông tin sản phẩm trong giỏ hàng của shop");
-            System.out.println("4. Thoát");
+            System.out.println("Chào mừng đến trình quản lý của " +shopName+ ".");
+            System.out.println("0. Thông tin người dùng " +shopName+ ".");
+            System.out.println("1. Danh sách sản phẩm của " +shopName+ ".");
+            System.out.println("2. Thêm sản phẩm mới vào giỏ hàng của shop");
+            System.out.println("3. Xoá sản phẩm khỏi giỏ hàng của shop");
+            System.out.println("4. Sửa thông tin sản phẩm trong giỏ hàng của shop");
+            System.out.println("5. Thoát");
 
             System.out.print("Mời chọn chức năng: ");
             try {
@@ -46,29 +69,56 @@ public class OwnerServiceImpl implements ProductService {
                 scanner.nextLine();
                 switch (choose) {
                     case 0:
+                        System.out.println("1. Tiếp tục xem, 2. Quay lại");
+                        int chooseinfo = scanner.nextInt();
+                        scanner.nextLine();
+                        switch (chooseinfo){
+                            case 1:
+                                OwnerServiceImpl ownerInfo = OwnerServiceImpl.getOwnerService(shopName);
+                                Owner info = ownerInfo.getOwnerInfoFromDatabase(shopName);
+                                assert info != null;
+                                System.out.println("ID người dùng: " +info.getShopownerID());
+                                System.out.println("Tên người dùng: " +info.getShopownerName());
+                                System.out.println("Số điện thoại người dùng: " +info.getShopownerNumber());
+                                System.out.println("Địa chỉ người dùng: " +info.getShopownerAddress());
+                                System.out.println("--------------------------------------------------");
+                                break;
+                            case 2:
+                                displayMenuAndOwnerChoice();
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    case 1:
                         ProductServiceImpl ChoiceCartInService = ProductServiceImpl.getInstanceProduct();
                         ArrayList<Product> cartProducts = ChoiceCartInService.getCartProductList(shopName);
+                        System.out.println("Tìm kiếm sản phẩm, 1: Theo tên, 2: Mô tả, 3: Theo giá ,4: Quay lại");
                         if (cartProducts != null && !cartProducts.isEmpty()){
                             System.out.println("Danh sách giỏ hàng đang có của shop");
                             cartProducts.forEach(System.out::println);
-                            System.out.println("Tìm kiếm sản phẩm, 1: Theo tên, 2: Mô tả, 3: Quay lại");
                             searchType = scanner.nextInt();
-                            CartServiceImpl.handleSearchType(cartProducts, searchType);
+                            ArrayList<Product> searchedProducts = new ArrayList<>(cartProducts);
+                            CartServiceImpl search = new CartServiceImpl();
+                            search.handleSearchType(cartProducts, searchType, searchedProducts, shopName);
                         }
                         else {
                             System.out.println("Danh sách sản phẩm trống.");
                             System.out.println("----------------------------------------");
                         }
                         break;
-                    case 1:
+                    case 2:
                         ProductServiceImpl CartInService = ProductServiceImpl.getInstanceProduct();
                         ArrayList<Product> Products = CartInService.getCartProductList(shopName);
                         System.out.println("Danh sách sản phẩm đang có trong giỏ hàng của shop");
+                        System.out.println("Tìm kiếm sản phẩm, 1: Theo tên, 2: Mô tả, 3: Theo giá , 4: Quay lại");
                         Products.forEach(System.out::println);
-                        System.out.println("Tìm kiếm sản phẩm, 1: Theo tên, 2: Mô tả, 3: Quay lại");
                         searchType = scanner.nextInt();
-                        CartServiceImpl.handleSearchType(Products, searchType);
+                        ArrayList<Product> searchedProducts = new ArrayList<>(Products);
+                        CartServiceImpl search = new CartServiceImpl();
+                        search.handleSearchType(Products, searchType, searchedProducts, shopName);
 
+                        System.out.println("Thêm sản phẩm mới: ");
                         while (true) {
                             System.out.print("Nhập ID sản phẩm: ");
                             int checkproductID = scanner.nextInt();
@@ -105,7 +155,7 @@ public class OwnerServiceImpl implements ProductService {
                             }
                         }
                         break;
-                    case 2:
+                    case 3:
                         ProductServiceImpl CartShopInService = ProductServiceImpl.getInstanceProduct();
                         ArrayList<Product> removeProducts = CartShopInService.getCartProductList(shopName);
                         if (removeProducts == null || removeProducts.isEmpty())
@@ -126,10 +176,10 @@ public class OwnerServiceImpl implements ProductService {
                         else
                             System.out.println("Lựa chọn không hợp lệ.");
                         break;
-                    case 3:
+                    case 4:
                         editCartProduct();
                         break;
-                    case 4:
+                    case 5:
                         HomePageView homePageView = HomePageView.gethomePageView();
                         homePageView.displayHomePage();
                         break;

@@ -67,8 +67,8 @@ public class AdminManagerImpl implements AdminService {
     private static ArrayList<Customer> CusUserList;
     private static ArrayList<Owner> OwnUserList;
     static {
-        CusUserList = ReadCustomerFile.readCustomersFile("D:\\06-Java\\00-UngDungShopee\\src\\Shopee\\database\\CustomerUserList.txt");
-        OwnUserList = ReadOwnerFile.readOwnersFile("D:\\06-Java\\00-UngDungShopee\\src\\Shopee\\database\\OwnerUserList.txt");
+        CusUserList = ReadCustomerFile.readCustomersFile("src\\Shopee\\database\\CustomerUserList.txt");
+        OwnUserList = ReadOwnerFile.readOwnersFile("src\\Shopee\\database\\OwnerUserList.txt");
     }
 
     @Override

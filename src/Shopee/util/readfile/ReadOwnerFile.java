@@ -15,18 +15,21 @@ public class ReadOwnerFile {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(" - ");
-                String ownerID = parts[0].trim();
-                String ownerNmae = parts[1].trim();
-                String ownerPhoneNumber = parts[2].trim();
-                String ownerAddress = parts[3].trim();
-                String ownerPassword = parts[4].trim();
-                owners.add(new Owner(ownerID, ownerNmae, ownerPhoneNumber, ownerAddress, ownerPassword));
+                if (parts.length >= 5) {
+                    String ownerID = parts[0].trim();
+                    String ownerNmae = parts[1].trim();
+                    String ownerPhoneNumber = parts[2].trim();
+                    String ownerAddress = parts[3].trim();
+                    String ownerPassword = parts[4].trim();
+                    owners.add(new Owner(ownerID, ownerNmae, ownerPhoneNumber, ownerAddress, ownerPassword));
+                }
+                else
+                    System.err.println("Dòng không đủ phần tử: " + line);
             }
-            return owners;
         }
         catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            System.out.println("Lỗi đầu vào");
         }
+        return owners;
     }
 }

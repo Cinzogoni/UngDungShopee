@@ -16,6 +16,12 @@ public class Customer {
         this.customerPassword = customerPassword;
     }
 
+    public Customer(String customerName, String customerPhoneNumber, String customerAddress) {
+        this.customerName = customerName;
+        this.customerPhoneNumber = customerPhoneNumber;
+        this.customerAddress = customerAddress;
+    }
+
     public String getCustomerName() {
         return customerName;
     }

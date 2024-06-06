@@ -2,10 +2,12 @@ package Shopee.services.cartservice;
 
 import Shopee.models.Product;
 
+import java.util.ArrayList;
+
 public interface CartService {
     public Object Payment();
-    public Object add(Product product);
+    public Object addProduct(Product product);
 
-    public Object remove(Product product);
+    public ArrayList<Product> removeProduct(Product product);
 
 }

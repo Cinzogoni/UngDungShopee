@@ -34,14 +34,33 @@ public class HomePageView {
                 switch (choose) {
                     case 0:
                         System.out.println("Mời đăng nhập");
+                        System.out.println("Bạn muốn tiếp tục đăng nhập: 1. Có, 2. Không");
+                        int back1 = scanner.nextInt();
+                        switch (back1){
+                            case 1:
+                                break;
+                            case 2:
+                                displayHomePage();
+                                break;
+                            default:
+                                System.out.println("Hãy chọn lại");
+                        }
                         UserServiceImpl.getuserService().login();
                         break;
                     case 1:
                         System.out.println("Mời đăng ký");
+                        System.out.println("Bạn muốn tiếp tục đăng ký: 1. Có, 2. Không");
+                        int back2 = scanner.nextInt();
+                        switch (back2){
+                            case 1:
+                                break;
+                            case 2:
+                                displayHomePage();
+                                break;
+                            default:
+                                System.out.println("Hãy chọn lại");
+                        }
                         UserServiceImpl.getuserService().register();
-                        break;
-                    default:
-                        System.out.println("Mời chọn lại");
                     }
                 }
             catch (InputMismatchException e) {

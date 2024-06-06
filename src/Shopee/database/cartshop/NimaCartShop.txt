@@ -1,5 +1,5 @@
-31585 - Quần jean nữ - 1800000.0 - 60 - Vải mỏng
-25957 - Áo sơ mi nữ - 650000.0 - 30 - Vải mát
-15352 - Quần thu nữ - 1500000.0 - 40 - Vải mỏng
-95357 - Quần sort nam - 650000.0 - 15 - Vải mát
-35102 - Quần kaki - 1200000.0 - 25 - Vải mát
+31585 - Quần jean nữ - 180.000 - 60 - Vải mỏng
+25957 - Áo sơ mi nữ - 65.000 - 30 - Vải mát
+15352 - Quần thun nữ - 150.000 - 40 - Vải mỏng
+95357 - Quần sort nam - 65.000 - 15 - Vải mát
+35102 - Quần kaki - 120.000 - 25 - Vải mát
