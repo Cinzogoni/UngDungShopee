@@ -1,17 +1,14 @@
 package Shopee.services.businessservice;
 
-import Shopee.models.Customer;
 import Shopee.models.Owner;
 import Shopee.models.Product;
 import Shopee.services.cartservice.CartServiceImpl;
 import Shopee.util.readfile.ReadOwnerFile;
 import Shopee.views.HomePageView;
 
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.util.*;
 
+import static Shopee.services.businessservice.ProductServiceImpl.getInstanceProduct;
 import static Shopee.services.businessservice.ProductServiceImpl.updateCartFile;
 
 
@@ -41,7 +38,7 @@ public class OwnerServiceImpl implements ProductService {
         return ownerService;
     }
     private Owner getOwnerInfoFromDatabase(String shopName) {
-        String filePath = "src\\Shopee\\database\\OwnerUserList.txt";
+        String filePath = "src/Shopee/database/OwnerUserList.txt";
         ArrayList<Owner> owners = ReadOwnerFile.readOwnersFile(filePath);
         for (Owner owner : owners) {
             if (owner.getShopownerName().equals(shopName)) {
@@ -91,76 +88,151 @@ public class OwnerServiceImpl implements ProductService {
                         }
                         break;
                     case 1:
-                        ProductServiceImpl ChoiceCartInService = ProductServiceImpl.getInstanceProduct();
+                        ProductServiceImpl ChoiceCartInService = getInstanceProduct();
                         ArrayList<Product> cartProducts = ChoiceCartInService.getCartProductList(shopName);
-                        System.out.println("Tìm kiếm sản phẩm, 1: Theo tên, 2: Mô tả, 3: Theo giá ,4: Quay lại");
-                        if (cartProducts != null && !cartProducts.isEmpty()){
-                            System.out.println("Danh sách giỏ hàng đang có của shop");
-                            cartProducts.forEach(System.out::println);
-                            searchType = scanner.nextInt();
-                            ArrayList<Product> searchedProducts = new ArrayList<>(cartProducts);
-                            CartServiceImpl search = new CartServiceImpl();
-                            search.handleSearchType(cartProducts, searchType, searchedProducts, shopName);
+                        if (!cartProducts.isEmpty()) {
+                            cartProducts.sort(Comparator.comparing(Product::getProductName));
+
+                            int offset3 = 0;
+                            int limit3 = 5;
+                            int totalProducts3 = cartProducts.size();
+                            int totalPages3 = (int) Math.ceil((double) totalProducts3 / limit3);
+                            boolean continuePaging3 = true;
+
+                            while (continuePaging3) {
+                                int pageStart = offset3 * limit3;
+                                int pageEnd = Math.min(pageStart + limit3, totalProducts3);
+                                System.out.println("Danh sách sản phẩm từ " + (pageStart + 1) + " đến " + pageEnd + " trong tổng số " + totalProducts3);
+                                for (int i = pageStart; i < pageEnd; i++) {
+                                    System.out.println((i + 1) + ". " + cartProducts.get(i));
+                                }
+
+                                System.out.println("Chọn trang: (B: Trang trước, N: Trang sau, S: Tìm kiếm, Q: Quay lại)");
+                                String pageChoice = scanner.next();
+
+                                switch (pageChoice.toUpperCase()) {
+                                    case "B":
+                                        if (offset3 > 0) offset3--;
+                                        else System.out.println("Đây là trang đầu tiên.");
+                                        break;
+                                    case "N":
+                                        if (offset3 < totalPages3 - 1) offset3++;
+                                        else System.out.println("Đây là trang cuối cùng.");
+                                        break;
+                                    case "S":
+                                        System.out.println("Tìm kiếm sản phẩm, 1: Theo tên, 2: Mô tả, 3: Theo giá ,4: Quay lại");
+                                        if (cartProducts != null && !cartProducts.isEmpty()){
+                                            cartProducts.sort(Comparator.comparing(Product::getProductName));
+                                            System.out.println("Danh sách giỏ hàng đang có của shop");
+                                            cartProducts.forEach(System.out::println);
+                                            searchType = scanner.nextInt();
+                                            ArrayList<Product> searchedProducts = new ArrayList<>(cartProducts);
+                                            CartServiceImpl search = new CartServiceImpl();
+                                            search.handleSearchType(cartProducts, searchType, searchedProducts, shopName);
+                                        }
+                                        else {
+                                            System.out.println("Danh sách sản phẩm trống.");
+                                            System.out.println("----------------------------------------");
+                                        }
+                                        break;
+                                    case "Q":
+                                        continuePaging3 = false;
+                                        break;
+                                    default:
+                                        System.out.println("Lựa chọn không hợp lệ. Vui lòng thử lại.");
+                                }
+                            }
                         }
-                        else {
-                            System.out.println("Danh sách sản phẩm trống.");
-                            System.out.println("----------------------------------------");
-                        }
+                        else
+                            System.out.println("Danh sách sản phẩm trống");
                         break;
                     case 2:
                         ProductServiceImpl CartInService = ProductServiceImpl.getInstanceProduct();
-                        ArrayList<Product> Products = CartInService.getCartProductList(shopName);
-                        System.out.println("Danh sách sản phẩm đang có trong giỏ hàng của shop");
-                        System.out.println("Tìm kiếm sản phẩm, 1: Theo tên, 2: Mô tả, 3: Theo giá , 4: Quay lại");
-                        Products.forEach(System.out::println);
-                        searchType = scanner.nextInt();
-                        ArrayList<Product> searchedProducts = new ArrayList<>(Products);
-                        CartServiceImpl search = new CartServiceImpl();
-                        search.handleSearchType(Products, searchType, searchedProducts, shopName);
+                        ArrayList<Product> addNewProducts = CartInService.getCartProductList(shopName);
+                        addNewProducts.sort(Comparator.comparing(Product::getProductName));
 
-                        System.out.println("Thêm sản phẩm mới: ");
-                        while (true) {
-                            System.out.print("Nhập ID sản phẩm: ");
-                            int checkproductID = scanner.nextInt();
-                            scanner.nextLine();
+                        int offset4 = 0;
+                        int limit4 = 5;
+                        int totalProducts4 = addNewProducts.size();
+                        int totalPages4 = (int) Math.ceil((double) totalProducts4 / limit4);
+                        boolean continuePaging4 = true;
 
-                            boolean exists = false;
-                            for (Product product : Products) {
-                                if (product.getProductID() == checkproductID) {
-                                    exists = true;
+                        while (continuePaging4) {
+                            int pageStart = offset4 * limit4;
+                            int pageEnd = Math.min(pageStart + limit4, totalProducts4);
+                            System.out.println("Hiển thị sản phẩm từ " + (pageStart + 1) + " đến " + pageEnd + " trong tổng số " + totalProducts4);
+                            for (int i = pageStart; i < pageEnd; i++) {
+                                System.out.println((i + 1) + ". " + addNewProducts.get(i));
+                            }
+                            System.out.println("Chọn trang: (B: Trang trước, N: Trang sau, A: Thêm sản phẩm mới, Q: Quay lại)");
+                            String pageChoice = scanner.next();
+
+                            switch (pageChoice.toUpperCase()) {
+                                case "B":
+                                    if (offset4 > 0) offset4--;
+                                    else System.out.println("Đây là trang đầu tiên.");
                                     break;
-                                }
-                            }
+                                case "N":
+                                    if (offset4 < totalPages4 - 1) offset4++;
+                                    else System.out.println("Đây là trang cuối cùng.");
+                                    break;
+                                case "A":
+                                    System.out.println("Danh sách sản phẩm đang có trong giỏ hàng của shop");
+                                    System.out.println("Tìm kiếm sản phẩm, 1: Theo tên, 2: Mô tả, 3: Theo giá , 4: Quay lại");
+                                    addNewProducts.forEach(System.out::println);
+                                    searchType = scanner.nextInt();
+                                    ArrayList<Product> searchedProducts = new ArrayList<>(addNewProducts);
+                                    CartServiceImpl search = new CartServiceImpl();
+                                    search.handleSearchType(addNewProducts, searchType, searchedProducts, shopName);
 
-                            if (exists) {
-                                System.out.println("ID sản phẩm đã tồn tại trong giỏ hàng. Vui lòng nhập ID khác.");
-                            }
-                            else {
-                                System.out.println("ID sản phẩm là duy nhất. Tiếp tục tạo sản phẩm mới.");
+                                    System.out.println("Thêm sản phẩm mới: ");
+                                    while (true) {
+                                        System.out.print("Nhập ID sản phẩm: ");
+                                        int checkproductID = scanner.nextInt();
+                                        scanner.nextLine();
 
-                                System.out.println("Mời nhập tên sản phẩm mới:");
-                                String productName = scanner.nextLine();
-                                System.out.println("Mời nhập giá sản phẩm mới:");
-                                double producrPrice = scanner.nextDouble();
-                                System.out.println("Mời nhập số lượng sản phẩm mới:");
-                                int productAmount = scanner.nextInt();
-                                scanner.nextLine();
-                                System.out.println("Mời nhập mô tả sản phẩm mới:");
-                                String productDescribe = scanner.nextLine();
-                                Product newProduct = new Product(checkproductID, productName, producrPrice, productAmount, productDescribe);
-                                Products.add(newProduct);
-                                Products.forEach(System.out::println);
-                                updateCartFile(shopName, Products);
-                                break;
+                                        boolean exists = false;
+                                        for (Product product : addNewProducts) {
+                                            if (product.getProductID() == checkproductID) {
+                                                exists = true;
+                                                break;
+                                            }
+                                        }
+
+                                        if (exists) {
+                                            System.out.println("ID sản phẩm đã tồn tại trong giỏ hàng. Vui lòng nhập ID khác.");
+                                        } else {
+                                            System.out.println("ID sản phẩm là duy nhất. Tiếp tục tạo sản phẩm mới.");
+
+                                            System.out.println("Mời nhập tên sản phẩm mới:");
+                                            String productName = scanner.nextLine();
+                                            System.out.println("Mời nhập giá sản phẩm mới:");
+                                            double producrPrice = scanner.nextDouble();
+                                            System.out.println("Mời nhập số lượng sản phẩm mới:");
+                                            int productAmount = scanner.nextInt();
+                                            scanner.nextLine();
+                                            System.out.println("Mời nhập mô tả sản phẩm mới:");
+                                            String productDescribe = scanner.nextLine();
+                                            Product newProduct = new Product(checkproductID, productName, producrPrice, productAmount, productDescribe);
+                                            addNewProducts.add(newProduct);
+                                            addNewProducts.forEach(System.out::println);
+                                            updateCartFile(shopName, addNewProducts);
+                                            break;
+                                        }
+                                    }
+                                case "Q":
+                                    continuePaging4 = false;
+                                    break;
+                                default:
+                                    System.out.println("Lựa chọn không hợp lệ. Vui lòng thử lại.");
                             }
                         }
-                        break;
                     case 3:
                         ProductServiceImpl CartShopInService = ProductServiceImpl.getInstanceProduct();
                         ArrayList<Product> removeProducts = CartShopInService.getCartProductList(shopName);
                         if (removeProducts == null || removeProducts.isEmpty())
                             System.out.println("Không có sản phẩm để xoá");
-                        System.out.println("Danh sách sản phẩm trong giỏ hàng:");
+                        System.out.println("Danh sách sản phẩm trong giỏ hàng c:");
                         for (int i = 0; i < removeProducts.size(); i++)
                             System.out.println(i + 1 + ". " + removeProducts.get(i));
                         System.out.print("Nhập số thứ tự của sản phẩm cần xoá khỏi giỏ hàng: ");

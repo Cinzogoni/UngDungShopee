@@ -83,7 +83,7 @@ public class CustomerServiceImpl {
                         break;
                     case 1:
                         System.out.println("Mời Chọn shop:");
-                        System.out.println("1. Kaiwai Shop");
+                        System.out.println("1. Kawai Shop");
                         System.out.println("2. Nima Shop");
                         System.out.println("3. Tisa Shop");
 
@@ -94,7 +94,7 @@ public class CustomerServiceImpl {
                         CartServiceImpl cartService = CartServiceImpl.getCartService(shopName, customerName);
                         switch (shopChoice) {
                             case 1:
-                                shopName = "Kaiwai Shop";
+                                shopName = "Kawai Shop";
                                 cartService.displayMenuAndGetCartChoice(shopName);
                                 break;
                             case 2:

@@ -9,8 +9,7 @@ import java.util.ArrayList;
 public class ProductServiceImpl implements ProductService {
     //Singleton
     private static volatile ProductServiceImpl productService;
-    public ProductServiceImpl(){
-    }
+
     public static ProductServiceImpl getInstanceProduct() {
         if (productService == null) {
             synchronized (ProductServiceImpl.class) {
@@ -21,23 +20,22 @@ public class ProductServiceImpl implements ProductService {
         }
         return productService;
     }
-    private static ArrayList<Product> ProductList;
-    private static ArrayList<Product> KaiwaiCartShop;
+
+    private static ArrayList<Product> KawaiCartShop;
     private static ArrayList<Product> NimaCartShop;
     private static ArrayList<Product> TisaCartShop;
 
     static {
-        ProductList = ReadFileUtil.readProductsFile("D:\\06-Java\\00-UngDungShopee\\src\\Shopee\\database\\ProductList.txt");
-        KaiwaiCartShop = ReadFileUtil.readProductsFile("D:\\06-Java\\00-UngDungShopee\\src\\Shopee\\database\\cartshop\\KaiwaiCartShop.txt");
-        NimaCartShop = ReadFileUtil.readProductsFile("D:\\06-Java\\00-UngDungShopee\\src\\Shopee\\database\\cartshop\\NimaCartShop.txt");
-        TisaCartShop = ReadFileUtil.readProductsFile("D:\\06-Java\\00-UngDungShopee\\src\\Shopee\\database\\cartshop\\TisaCartShop.txt");
+        KawaiCartShop = ReadFileUtil.readProductsFile("src/Shopee/database/cartshop/KawaiCartShop.txt");
+        NimaCartShop = ReadFileUtil.readProductsFile("src/Shopee/database/cartshop/NimaCartShop.txt");
+        TisaCartShop = ReadFileUtil.readProductsFile("src/Shopee/database/cartshop/TisaCartShop.txt");
     }
 
 
-    private  ArrayList<Product> getCartShop(String shopName) {
+    private ArrayList<Product> getCartShop(String shopName) {
         switch (shopName) {
-            case "Kaiwai Shop":
-                return KaiwaiCartShop;
+            case "Kawai Shop":
+                return KawaiCartShop;
             case "Nima Shop":
                 return NimaCartShop;
             case "Tisa Shop":
@@ -50,13 +48,13 @@ public class ProductServiceImpl implements ProductService {
         String filePath = "";
         switch (shopName) {
             case "Kaiwai Shop":
-                filePath = "D:\\06-Java\\00-UngDungShopee\\src\\Shopee\\database\\cartshop\\KaiwaiCartShop.txt";
+                filePath = "src/Shopee/database/cartshop/KaiwaiCartShop.txt";
                 break;
             case "Nima Shop":
-                filePath = "D:\\06-Java\\00-UngDungShopee\\src\\Shopee\\database\\cartshop\\NimaCartShop.txt";
+                filePath = "src/Shopee/database/cartshop/NimaCartShop.txt";
                 break;
             case "Tisa Shop":
-                filePath = "D:\\06-Java\\00-UngDungShopee\\src\\Shopee\\database\\cartshop\\TisaCartShop.txt";
+                filePath = "src/Shopee/database/cartshop/TisaCartShop.txt";
                 break;
             default:
                 break;
@@ -66,13 +64,15 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ArrayList<Product> getCartProductList(String shopName) {
-        return getCartShop(shopName);
+        ArrayList<Product> cartShop = getCartShop(shopName);
+        if (cartShop == null) {
+            return new ArrayList<>();
+        }
+        return cartShop;
     }
 
     @Override
     public ArrayList<Product> editCartProduct() {
         return new ArrayList<>();
     }
-
-
 }
