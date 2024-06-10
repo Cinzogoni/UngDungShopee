@@ -3,6 +3,7 @@ package Shopee.util.readfile;
 import Shopee.models.Product;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,11 +23,14 @@ public class ReadFileUtil {
                 String productDescribe = parts[4].trim();
                 products.add(new Product(productID, productName, producrPrice, productAmount, productDescribe));
             }
-        return products;
+        }
+        catch (FileNotFoundException e){
+            System.err.println("Không thể đọc tập tin: " +filePath);
         }
         catch (IOException e) {
             e.printStackTrace();
             return null;
         }
+        return products;
     }
 }

@@ -18,6 +18,8 @@ public class Product {
         this.productDescribe = productDescribe;
     }
 
+
+
     public int getProductID() {
         return productID;
     }
@@ -60,6 +62,6 @@ public class Product {
 
     @Override
     public String toString() {
-        return productID + " - " + productName + " - " + producrPrice + " - " + productAmount +" - "+productDescribe;
+        return String.format(productID +" - "+ productName +" - "+ producrPrice +" - "+ productAmount +" - "+ productDescribe);
     }
 }

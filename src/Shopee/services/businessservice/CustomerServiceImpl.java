@@ -91,28 +91,28 @@ public class CustomerServiceImpl {
                         scanner.nextLine();
 
                         String shopName = "";
-                        CartServiceImpl cartService = CartServiceImpl.getCartService(shopName, customerName);
                         switch (shopChoice) {
                             case 1:
                                 shopName = "Kawai Shop";
-                                cartService.displayMenuAndGetCartChoice(shopName);
                                 break;
                             case 2:
                                 shopName = "Nima Shop";
-                                cartService.displayMenuAndGetCartChoice(shopName);
                                 break;
                             case 3:
                                 shopName = "Tisa Shop";
-                                cartService.displayMenuAndGetCartChoice(shopName);
                                 break;
                             default:
                                 System.out.println("Lựa chọn không hợp lệ.");
                                 continue;
                         }
+                        CartServiceImpl cartService = CartServiceImpl.getCartService(shopName, customerName);
+                        cartService.displayMenuAndGetCartChoice(shopName);
+
                         ProductServiceImpl ChoiceCartShopInService = ProductServiceImpl.getInstanceProduct();
                         ArrayList<Product> cartShop = ChoiceCartShopInService.getCartProductList(shopName);
                         System.out.println("Danh sách sản phẩm của shop " + shopName + ":");
                         cartShop.forEach(System.out::println);
+                        break;
                     case 2:
                         HomePageView homePageView = HomePageView.gethomePageView();
                         homePageView.displayHomePage();
