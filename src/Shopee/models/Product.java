@@ -1,9 +1,12 @@
 package Shopee.models;
 
+import java.text.DecimalFormat;
+import java.util.Objects;
+
 public class Product {
     private int productID;
     private String productName;
-    private double producrPrice;
+    private double productPrice;
     private int productAmount;
     private String productDescribe;
 
@@ -13,12 +16,10 @@ public class Product {
     public Product(int productID, String productName, double producrPrice, int productAmount, String productDescribe) {
         this.productID = productID;
         this.productName = productName;
-        this.producrPrice = producrPrice;
+        this.productPrice = producrPrice;
         this.productAmount = productAmount;
         this.productDescribe = productDescribe;
     }
-
-
 
     public int getProductID() {
         return productID;
@@ -36,12 +37,12 @@ public class Product {
         this.productName = productName;
     }
 
-    public double getProducrPrice() {
-        return producrPrice;
+    public double getProductPrice() {
+        return productPrice;
     }
 
-    public void setProducrPrice(double producrPrice) {
-        this.producrPrice = producrPrice;
+    public void setProducrPrice(double productPrice) {
+        this.productPrice = productPrice;
     }
 
     public int getProductAmount() {
@@ -61,7 +62,24 @@ public class Product {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return productID == product.productID &&
+                Double.compare(product.productPrice, productPrice) == 0 &&
+                productAmount == product.productAmount &&
+                Objects.equals(productName, product.productName) &&
+                Objects.equals(productDescribe, product.productDescribe);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(productID, productName, productPrice, productAmount, productDescribe);
+    }
+
+    @Override
     public String toString() {
-        return String.format(productID +" - "+ productName +" - "+ producrPrice +" - "+ productAmount +" - "+ productDescribe);
+        return String.format("%d - %s - %,.0f - %d - %s", productID, productName, productPrice, productAmount, productDescribe);
     }
 }

@@ -1,6 +1,6 @@
-3312 - Quần thun nữ - 150.000 - 40 - Vải mỏng
-6625 - Quần sort nam - 65.000 - 15 - Vải mát
-4425 - Quần kaki - 120.000 - 25 - Vải mát
-7714 - Áo len nữ - 100.000 - 12 - Vải len
-9914 - Áo thun có cổ - 65.000 - 20 - Vải mát
-3736 - Áo khoác da nam - 450.000 - 10 - Vải da
+3312 - Quần thun nữ - 150000 - 40 - Vải mỏng
+6625 - Quần sort nam - 65000 - 15 - Vải mát
+4425 - Quần kaki - 120000 - 25 - Vải mát
+7714 - Áo len nữ - 100000 - 12 - Vải len
+9914 - Áo thun có cổ - 65000 - 20 - Vải mát
+3736 - Áo khoác da nam - 450000 - 10 - Vải da

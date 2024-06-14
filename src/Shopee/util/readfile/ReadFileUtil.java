@@ -6,6 +6,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class ReadFileUtil {
@@ -18,10 +20,10 @@ public class ReadFileUtil {
                 String[] parts = line.split(" - ");
                 int productID = Integer.parseInt(parts[0].trim());
                 String productName = parts[1].trim();
-                double producrPrice = Double.parseDouble(parts[2].trim().replace(".", "").replace(",", "."));
+                double productPrice = Double.parseDouble(parts[2].trim());
                 int productAmount = Integer.parseInt(parts[3].trim());
                 String productDescribe = parts[4].trim();
-                products.add(new Product(productID, productName, producrPrice, productAmount, productDescribe));
+                products.add(new Product(productID, productName, productPrice, productAmount, productDescribe));
             }
         }
         catch (FileNotFoundException e){

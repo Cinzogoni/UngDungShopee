@@ -114,20 +114,33 @@ public class UserServiceImpl implements UserService {
                     System.out.println("Nhập tên người dùng: ");
                     String customerName = scanner.nextLine();
 
-                    System.out.println("Nhập số điện thoại, ví dụ: 038.647.9893: ");
-                    String customerPhoneNumber = scanner.nextLine();
-                    if (!phoneNumberIsValid(customerPhoneNumber)) {
-                        System.out.println("Hãy nhập lại số điẹn thoại");
+                    String customerPhoneNumber;
+                    do {
+                        System.out.println("Nhập số điện thoại, ví dụ: 038.647.9893: ");
+                        customerPhoneNumber = scanner.nextLine();
+                        if (!phoneNumberIsValid(customerPhoneNumber)) {
+                            System.out.println("Số điện thoại không hợp lệ, hãy nhập lại:");
+                        }
                     }
+                    while (!phoneNumberIsValid(customerPhoneNumber));
+                    System.out.println("Số điện thoại hợp lệ");
+
 
                     System.out.println("Nhập địa chỉ: ");
                     String customerAddress = scanner.nextLine();
 
-                    System.out.println("Nhập mật khẩu, 8 đến 16 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt: ");
-                    String customerPassword = scanner.nextLine();
-                    if (!passwordIsValid(customerPassword)) {
-                        System.out.println("Mật khẩu không hợp lệ.");
+
+                    String customerPassword;
+                    do {
+                        System.out.println("Nhập mật khẩu, 8 đến 16 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt: ");
+                        customerPassword = scanner.nextLine();
+                        if (!passwordIsValid(customerPassword)) {
+                            System.out.println("Mật khẩu không hợp lệ, hãy nhập lại.");
+                        }
                     }
+                    while (!passwordIsValid(customerPassword));
+                    System.out.println("Mật khẩu hợp lệ");
+
 
                     Customer newCustomer = new Customer(customerName, customerPhoneNumber, customerAddress, customerPassword);
                     CusUserList.add(newCustomer);
@@ -141,21 +154,30 @@ public class UserServiceImpl implements UserService {
                     System.out.println("Nhập tên cho shop: ");
                     String ownerName = scanner.nextLine();
 
-                    System.out.println("Nhập sổ điện thoại cho shop, ví dụ: 038.647.9893: ");
-                    String ownerNumber = scanner.nextLine();
-                    if (!phoneNumberIsValid(ownerNumber)) {
-                        System.out.println("Hãy nhập lại số điẹn thoại");
+                    String ownerNumber;
+                    do {
+                        System.out.println("Nhập sổ điện thoại cho shop, ví dụ: 038.647.9893: ");
+                        ownerNumber = scanner.nextLine();
+                        if (!phoneNumberIsValid(ownerNumber)) {
+                            System.out.println("Số điẹn thoại không hợp lệ, hãy nhập lại");
+                        }
                     }
+                    while (!phoneNumberIsValid(ownerNumber));
+                    System.out.println("Số điện thoại hợp lệ");
 
                     System.out.println("Nhập địa chỉ cho shop: ");
                     String ownerAddress = scanner.nextLine();
 
-                    System.out.println("Nhập mật khẩu, 8 đến 16 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt: ");
-                    String ownerPassword = scanner.nextLine();
-
-                    if (!passwordIsValid(ownerPassword)) {
-                        System.out.println("Mật khẩu không hợp lệ.");
+                    String ownerPassword;
+                    do {
+                        System.out.println("Nhập mật khẩu, 8 đến 16 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt: ");
+                        ownerPassword = scanner.nextLine();
+                        if (!passwordIsValid(ownerPassword)) {
+                            System.out.println("Mật khẩu không hợp lệ, hãy nhập lại.");
+                        }
                     }
+                    while (!passwordIsValid(ownerPassword));
+                    System.out.println("Mật khẩu hợp lệ");
 
                     Owner newOwner = new Owner(ownerID, ownerName, ownerNumber, ownerAddress, ownerPassword);
                     OwnUserList.add(newOwner);
@@ -179,7 +201,7 @@ public class UserServiceImpl implements UserService {
             }
             else if (user instanceof Owner) {
                 Owner owner = (Owner) user;
-                pw.println(owner.getShopownerID() + " - " + owner.getShopownerNumber() + " - " + owner.getShopownerAddress() + " - " + owner.getShopownerPassword());
+                pw.println(owner.getShopownerID() +" - "+ owner.getShopownerName() +" - " + owner.getShopownerNumber() + " - " + owner.getShopownerAddress() + " - " + owner.getShopownerPassword());
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -7,7 +7,5 @@ import java.util.ArrayList;
 public interface CartService {
     public Object Payment();
     public Object addProduct(Product product);
-
-    public ArrayList<Product> removeProduct(Product product);
-
+    ArrayList<Product> removeProduct(Product product);
 }

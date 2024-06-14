@@ -25,7 +25,7 @@ public class HomePageView {
         Scanner scanner = new Scanner(System.in);
         int choose;
         do {
-            System.out.println("Chào mừng đến trang trủ");
+            System.out.println("Chào mừng đến trang chủ");
             System.out.println("0. Đăng nhập");
             System.out.println("1. Đăng ký");
             System.out.println("2. Đóng chương trình");

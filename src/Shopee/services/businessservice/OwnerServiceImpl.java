@@ -100,6 +100,7 @@ public class OwnerServiceImpl implements ProductService {
                             boolean continuePaging3 = true;
 
                             while (continuePaging3) {
+                                totalProducts3 = cartProducts.size();
                                 int pageStart = offset3 * limit3;
                                 int pageEnd = Math.min(pageStart + limit3, totalProducts3);
                                 System.out.println("Danh sách sản phẩm từ " + (pageStart + 1) + " đến " + pageEnd + " trong tổng số " + totalProducts3);
@@ -126,7 +127,7 @@ public class OwnerServiceImpl implements ProductService {
                                             System.out.println("Danh sách giỏ hàng đang có của shop");
                                             cartProducts.forEach(System.out::println);
                                             searchType = scanner.nextInt();
-                                            ArrayList<Product> searchedProducts = new ArrayList<>(cartProducts);
+                                            Set<Product> searchedProducts = new HashSet<>(cartProducts);
                                             CartServiceImpl search = new CartServiceImpl();
                                             search.handleSearchType(cartProducts, searchType, searchedProducts, shopName);
                                         }
@@ -158,6 +159,7 @@ public class OwnerServiceImpl implements ProductService {
                         boolean continuePaging4 = true;
 
                         while (continuePaging4) {
+                            totalProducts4 = addNewProducts.size();
                             int pageStart = offset4 * limit4;
                             int pageEnd = Math.min(pageStart + limit4, totalProducts4);
                             System.out.println("Hiển thị sản phẩm từ " + (pageStart + 1) + " đến " + pageEnd + " trong tổng số " + totalProducts4);
@@ -181,7 +183,7 @@ public class OwnerServiceImpl implements ProductService {
                                     System.out.println("Tìm kiếm sản phẩm, 1: Theo tên, 2: Mô tả, 3: Theo giá , 4: Quay lại");
                                     addNewProducts.forEach(System.out::println);
                                     searchType = scanner.nextInt();
-                                    ArrayList<Product> searchedProducts = new ArrayList<>(addNewProducts);
+                                    Set<Product> searchedProducts = new HashSet<>(addNewProducts);
                                     CartServiceImpl search = new CartServiceImpl();
                                     search.handleSearchType(addNewProducts, searchType, searchedProducts, shopName);
 
